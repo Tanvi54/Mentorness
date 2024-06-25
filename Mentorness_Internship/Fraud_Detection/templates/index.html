@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fastag Fraud Detection</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: url('https://i.ndtvimg.com/i/2018-01/toll-plaza_650x400_71516080830.jpg') no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            backdrop-filter: blur(5px);
+        }
+
+        .header-bar {
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 20px 0; /* Increased padding */
+            text-align: center;
+        }
+
+        .header-bar h1 {
+            color: white;
+            margin: 0;
+            font-size: 3em; /* Increased font size */
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .form-container {
+            display: flex;
+            justify-content: center;
+            max-width: 900px;
+            width: 100%;
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .form-column {
+            flex: 1;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+
+        label {
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        input[type="text"] {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            font-size: 1em;
+            width: 100%;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus {
+            border-color: #007bff;
+        }
+
+        input[type="submit"] {
+            padding: 15px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: background 0.3s;
+            width: 100%;
+            box-sizing: border-box;
+            margin-top: 15px; /* Space between inputs and button */
+        }
+
+        input[type="submit"]:hover {
+            background: #218838;
+        }
+
+        .prediction-result {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(212, 237, 218, 0.85);
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            border-radius: 10px;
+            font-size: 1.1em;
+            text-align: center;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            color: #007bff;
+            text-decoration: underline;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 220px;
+            background-color: #555;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -110px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .note {
+            font-size: 0.9em;
+            color: #555;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        @media (max-width: 900px) {
+            .form-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .form-column {
+                width: 100%;
+                padding: 0;
+            }
+
+            input[type="submit"] {
+                width: auto;
+            }
+        }
+
+        /* Additional styles for two-column layout */
+        .form-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .form-row .form-column {
+            flex: 1;
+            padding: 0 10px;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                flex-direction: column;
+            }
+
+            .form-row .form-column {
+                padding: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header-bar">
+        <h1>Fastag Fraud Detection</h1>
+    </div>
+    <div>
+    <div class="form-container">
+        <form action="/predict" method="post" style="width: 100%;">
+            <div class="form-row">
+                <div class="form-column">
+                    <label for="Transaction_Amount">Transaction Amount:</label>
+                    <input type="text" id="Transaction_Amount" name="Transaction_Amount" placeholder="Enter transaction amount" required>
+                    
+                    <label for="Amount_paid">Amount Paid:</label>
+                    <input type="text" id="Amount_paid" name="Amount_paid" placeholder="Enter amount paid" required>
+                    
+                    <label for="Vehicle_Speed">Vehicle Speed:</label>
+                    <input type="text" id="Vehicle_Speed" name="Vehicle_Speed" placeholder="Enter vehicle speed (km/h)" required>
+                    
+                    <label for="Latitude">Latitude:</label>
+                    <input type="text" id="Latitude" name="Latitude" placeholder="Enter latitude" required>
+                    
+                    <label for="Longitude">Longitude:</label>
+                    <input type="text" id="Longitude" name="Longitude" placeholder="Enter longitude" required>
+
+                    <label for="Day">Day:</label>
+                    <input type="text" id="Day" name="Day" placeholder="Enter day of the month" required>
+                    
+                    <label for="Month">Month:</label>
+                    <input type="text" id="Month" name="Month" placeholder="Enter month" required>
+                    
+                    <label for="Hour">Hour:</label>
+                    <input type="text" id="Hour" name="Hour" placeholder="Enter hour of the day" required>
+                </div>
+                <div class="form-column">
+                    
+                    
+                    <label for="Vehicle_Type">Vehicle Type:</label>
+                    <input type="text" id="Vehicle_Type" name="Vehicle_Type" placeholder="Enter vehicle type (e.g., car, truck)" required>
+                    
+                    <label for="FastagID">Fastag ID:</label>
+                    <input type="text" id="FastagID" name="FastagID" placeholder="Enter Fastag ID" required>
+                    
+                    <label for="TollBoothID">Toll Booth ID:</label>
+                    <input type="text" id="TollBoothID" name="TollBoothID" placeholder="Enter Toll Booth ID" required>
+                    
+                    <label for="Lane_Type">Lane Type:</label>
+                    <input type="text" id="Lane_Type" name="Lane_Type" placeholder="Enter lane type (e.g., fast, slow)" required>
+                    
+                    <label for="Vehicle_Dimensions">Vehicle Dimensions:</label>
+                    <input type="text" id="Vehicle_Dimensions" name="Vehicle_Dimensions" placeholder="Enter vehicle dimensions (LxWxH)" required>
+                </div>
+            </div>
+            <input type="submit" value="Predict">
+        </form>
+    </div>
+    {% if prediction_text %}
+    <h2>Prediction Result: {{ prediction_text }}</h2>
+    {% endif %}
+    </div>
+    
+</body>
+</html>
